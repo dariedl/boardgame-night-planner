@@ -1,15 +1,15 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
-import { getBoardgames } from "~/models/boardgame.server";
+import { getBoardgameList } from "~/server/boardgame.server";
 
 type LoaderData = {
-  boardgames: Awaited<ReturnType<typeof getBoardgames>>;
+  boardgames: Awaited<ReturnType<typeof getBoardgameList>>;
 };
 
 export const loader = async () => {
   return json<LoaderData>({
-    boardgames: await getBoardgames(),
+    boardgames: await getBoardgameList(),
   });
 };
 
