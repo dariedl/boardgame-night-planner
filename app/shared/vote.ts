@@ -1,13 +1,16 @@
-import { getUserInformation } from "~/server/services/user.service";
 import { BoardgameWithVotes } from "./boardgame";
 import { UserInformation } from "./user";
 
-export type VoteType = "interest" | "commit";
+export type VoteType = "interest" | "commit" | "none";
 
 export interface Vote {
   userId: string;
   boardgameId: string;
   type: VoteType;
+}
+
+export interface VoteWithName extends Vote {
+  userName: string;
 }
 
 export type CanVoteResult = "CannotVote" | "CanAddVote" | "CanReplaceVote";

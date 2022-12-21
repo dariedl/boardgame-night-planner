@@ -1,9 +1,12 @@
 import { FaRegThumbsUp } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
-import { Boardgame } from "~/shared/domain/boardgame";
+import { BoardgameWithVotes } from "~/shared/boardgame";
+import { UserInformation } from "~/shared/user";
+import { VoteType, VoteWithName } from "~/shared/vote";
 
 interface BoardgameItemProps {
-  boardgame: Boardgame;
+  boardgame: BoardgameWithVotes;
+  user: UserInformation;
 }
 
 /* 
@@ -13,11 +16,7 @@ If you vote with interest there will be a blue vote appearing, also games you yo
 are also highlighted blue.
 Same for commit but with green
 */
-type VoteType = "none" | "interest" | "commit";
-interface Vote {
-  player?: string;
-  type: VoteType;
-}
+
 const mapVoteToCircleColor = (type?: VoteType) => {
   if (type === "commit") {
     return "bg-green-600";
@@ -39,33 +38,41 @@ const mapVoteToBgColor = (type?: VoteType) => {
 };
 // Was wenn mehr interesse als max spieleranzahl?
 // Spielgewicht
-export const BoardgameItem: React.FC<BoardgameItemProps> = ({ boardgame }) => {
-  const { title, description, minPlayers, maxPlayers, urlLink } = boardgame;
+export const BoardgameItem: React.FC<BoardgameItemProps> = ({
+  boardgame,
+  user,
+}) => {
+  const {
+    title,
+    description,
+    minPlayers,
+    maxPlayers,
+    urlLink,
+    votes: boardgameVotes,
+  } = boardgame;
   const header =
     minPlayers === maxPlayers
       ? `${title} (${minPlayers})`
       : `${title} (${minPlayers}-${maxPlayers})`;
-  const votes: Vote[] = [
-    { player: "Tom", type: "interest" },
-    { player: "Jane", type: "interest" },
-    { player: "Max", type: "commit" },
-  ];
+
+  const currentVote = boardgame.votes.find((vote) => vote.userId === user.id);
   let votedOnWith: VoteType = "none";
-  if (maxPlayers === 5) {
-    votedOnWith = "commit";
-  } else if (maxPlayers === 4) {
-    votedOnWith = "interest";
+  if (currentVote) {
+    votedOnWith = currentVote.type;
   }
+
   const bgColor = mapVoteToBgColor(votedOnWith);
-  const sortedVotes = [...votes].sort((voteA, voteB) => {
-    if (voteA.type === "commit") {
-      return -1;
-    } else if (voteB.type === "commit") {
-      return +1;
-    } else {
-      return -1;
+  const sortedVotes: Partial<VoteWithName>[] = [...boardgameVotes].sort(
+    (voteA, voteB) => {
+      if (voteA.type === "commit") {
+        return -1;
+      } else if (voteB.type === "commit") {
+        return +1;
+      } else {
+        return -1;
+      }
     }
-  });
+  );
   for (let i = sortedVotes.length; i < maxPlayers; i++) {
     sortedVotes.push({ type: "none" });
   }

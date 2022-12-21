@@ -1,6 +1,8 @@
 import { BoardgameWithVotes } from "~/shared/boardgame";
+import { VoteWithName } from "~/shared/vote";
 import { getBoardgame, getBoardgames } from "../models/boardgame.seed";
 import { getVotes } from "../models/vote.seed";
+import { getUserInformation } from "./user.service";
 
 export function getBoardgameWithVotes(
   boardgameId: string
@@ -10,7 +12,11 @@ export function getBoardgameWithVotes(
     return undefined;
   }
   const votes = getVotes({ boardgame: boardgameId });
-  return { ...boardgame, votes };
+  const votesWithNames: VoteWithName[] = votes.map((vote) => {
+    const user = getUserInformation(vote.userId);
+    return { ...vote, userName: user?.name };
+  });
+  return { ...boardgame, votes: votesWithNames };
 }
 
 export function getBoardgamesWithVotes() {
@@ -18,6 +24,10 @@ export function getBoardgamesWithVotes() {
 
   return boardgames.map((boardgame) => {
     const votes = getVotes({ boardgame: boardgame.id });
-    return { ...boardgame, votes };
+    const votesWithNames: VoteWithName[] = votes.map((vote) => {
+      const user = getUserInformation(vote.userId);
+      return { ...vote, userName: user?.name };
+    });
+    return { ...boardgame, votes: votesWithNames };
   });
 }

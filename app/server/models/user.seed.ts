@@ -3,15 +3,15 @@ import type { User } from "../../shared/user";
 const users: Array<User> = [
   {
     id: "1",
-    name: "Thea Reiss",
+    name: "Daniel Riedl",
   },
   {
     id: "2",
-    name: "Celine Häusler",
+    name: "Veronika Bernhofer",
   },
   {
     id: "3",
-    name: "Philip Appelt",
+    name: "Daniel Grimm",
   },
   {
     id: "4",

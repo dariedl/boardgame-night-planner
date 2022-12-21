@@ -1,4 +1,4 @@
-import { Vote } from "./vote";
+import { VoteWithName } from "./vote";
 
 type Weight = "light" | "midweight" | "heavy";
 
@@ -13,5 +13,5 @@ export interface Boardgame {
 }
 
 export interface BoardgameWithVotes extends Boardgame {
-  votes: Vote[];
+  votes: VoteWithName[];
 }

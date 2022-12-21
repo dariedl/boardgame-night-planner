@@ -5,14 +5,11 @@ import { getVotes } from "../models/vote.seed";
 const maxInterestVotes = 4;
 const maxCommitVotes = 1;
 
-export function getUserInformation(
-  userId: string
-): UserInformation | undefined {
+export function getUserInformation(userId: string): UserInformation {
   const user = getUserById(userId);
-  if (user) {
-    const votes = getVotes({ user: user.id });
-    return { ...user, maxCommitVotes, maxInterestVotes, votes };
+  if (!user) {
+    throw new Error("No User with the Id found");
   }
-
-  return undefined;
+  const votes = getVotes({ user: user.id });
+  return { ...user, maxCommitVotes, maxInterestVotes, votes };
 }

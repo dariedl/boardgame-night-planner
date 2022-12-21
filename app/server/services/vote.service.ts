@@ -1,6 +1,5 @@
-import { UserInformation } from "~/shared/user";
 import { canVoteOnGame, VoteType } from "~/shared/vote";
-import { addVote, getVote, removeVote } from "../models/vote.seed";
+import { addVote, removeVote } from "../models/vote.seed";
 import { getBoardgameWithVotes } from "./boardgame.service";
 import { getUserInformation } from "./user.service";
 
@@ -11,7 +10,7 @@ export function voteOnBoardgame(
 ) {
   const user = getUserInformation(userId);
   const boardgame = getBoardgameWithVotes(boardgameId);
-  if (!user || !boardgame) {
+  if (!boardgame) {
     return;
   }
   const canVote = canVoteOnGame(user, boardgame, type);
