@@ -1,4 +1,5 @@
-import { canVoteOnGame, VoteType } from "~/shared/vote";
+import type { VoteType } from "~/shared/vote";
+import { canVoteOnGame } from "~/shared/vote";
 import { addVote, removeVote } from "../models/vote.seed";
 import { getBoardgameWithVotes } from "./boardgame.service";
 import { getUserInformation } from "./user.service";
