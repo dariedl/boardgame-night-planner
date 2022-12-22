@@ -2,7 +2,7 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
 import { BoardgameWithVotes } from "~/shared/boardgame";
 import { UserInformation } from "~/shared/user";
-import { VoteType, VoteWithName } from "~/shared/vote";
+import { canVoteOnGame, VoteType, VoteWithName } from "~/shared/vote";
 
 interface BoardgameItemProps {
   boardgame: BoardgameWithVotes;
@@ -76,6 +76,8 @@ export const BoardgameItem: React.FC<BoardgameItemProps> = ({
   for (let i = sortedVotes.length; i < maxPlayers; i++) {
     sortedVotes.push({ type: "none" });
   }
+
+  
   return (
     <div className={`flex justify-between ${bgColor}`}>
       <div className="flex w-4/5">
@@ -107,10 +109,10 @@ export const BoardgameItem: React.FC<BoardgameItemProps> = ({
         </div>
       </div>
       <div className="flex w-max flex-col justify-center">
-        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-green-500">
+        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-green-500 disabled:opacity-25" disabled={canVoteOnGame(user, boardgame, 'commit') === 'CannotVote'}>
           <FaRegThumbsUp className="h-10 w-10" />
         </button>
-        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-blue-400">
+        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-blue-400 disabled:opacity-25" disabled={canVoteOnGame(user, boardgame, 'interest') === 'CannotVote'}>
           <FaRegLightbulb className="h-10 w-10" />
         </button>
       </div>
