@@ -2,6 +2,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
 import { getBoardgameList } from "~/server/boardgame.server";
+import { voteOnBoardgame } from "~/server/vote.server";
 import { getUser } from "~/server/user.server";
 
 type LoaderData = {
@@ -9,6 +10,15 @@ type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
 };
 const userId = "1";
+
+export async function action({ request }) {
+  const form = await request.formData();
+  const type = form.get("voteType");
+  const [voteType, boardgameId] = type.split("-");
+  console.log(111, userId, boardgameId, voteType);
+  await voteOnBoardgame(userId, boardgameId, voteType);
+  return null;
+}
 
 export const loader = async () => {
   return json<LoaderData>({

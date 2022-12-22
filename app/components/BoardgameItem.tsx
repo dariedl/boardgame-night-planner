@@ -1,8 +1,11 @@
 import { FaRegThumbsUp } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
-import { BoardgameWithVotes } from "~/shared/boardgame";
-import { UserInformation } from "~/shared/user";
-import { canVoteOnGame, VoteType, VoteWithName } from "~/shared/vote";
+import type { BoardgameWithVotes } from "~/shared/boardgame";
+import type { UserInformation } from "~/shared/user";
+import type { VoteType, VoteWithName } from "~/shared/vote";
+import { canVoteOnGame } from "~/shared/vote";
+import { Form } from "@remix-run/react";
+import { VoteButtons } from "./VoteButtons";
 
 interface BoardgameItemProps {
   boardgame: BoardgameWithVotes;
@@ -38,10 +41,7 @@ const mapVoteToBgColor = (type?: VoteType) => {
 };
 // Was wenn mehr interesse als max spieleranzahl?
 // Spielgewicht
-export const BoardgameItem: React.FC<BoardgameItemProps> = ({
-  boardgame,
-  user,
-}) => {
+export const BoardgameItem = ({ boardgame, user }: BoardgameItemProps) => {
   const {
     title,
     description,
@@ -77,7 +77,6 @@ export const BoardgameItem: React.FC<BoardgameItemProps> = ({
     sortedVotes.push({ type: "none" });
   }
 
-  
   return (
     <div className={`flex justify-between ${bgColor}`}>
       <div className="flex w-4/5">
@@ -108,14 +107,7 @@ export const BoardgameItem: React.FC<BoardgameItemProps> = ({
           </div>
         </div>
       </div>
-      <div className="flex w-max flex-col justify-center">
-        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-green-500 disabled:opacity-25" disabled={canVoteOnGame(user, boardgame, 'commit') === 'CannotVote'}>
-          <FaRegThumbsUp className="h-10 w-10" />
-        </button>
-        <button className="w-fit border-2 border-black rounded mr-5 mb-5 mt-5 bg-blue-400 disabled:opacity-25" disabled={canVoteOnGame(user, boardgame, 'interest') === 'CannotVote'}>
-          <FaRegLightbulb className="h-10 w-10" />
-        </button>
-      </div>
+      <VoteButtons user={user} boardgame={boardgame}></VoteButtons>
     </div>
   );
 };
