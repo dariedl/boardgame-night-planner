@@ -3,8 +3,6 @@ import { FaRegLightbulb } from "react-icons/fa";
 import type { BoardgameWithVotes } from "~/shared/boardgame";
 import type { UserInformation } from "~/shared/user";
 import type { VoteType, VoteWithName } from "~/shared/vote";
-import { canVoteOnGame } from "~/shared/vote";
-import { Form } from "@remix-run/react";
 import { VoteButtons } from "./VoteButtons";
 
 interface BoardgameItemProps {
