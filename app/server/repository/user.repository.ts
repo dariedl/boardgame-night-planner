@@ -1,6 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import type { User } from "~/shared/user";
-import prisma from "../db.server";
 
+const prisma = new PrismaClient();
 export async function getUsers(): Promise<User[]> {
   return await prisma.user.findMany({});
 }

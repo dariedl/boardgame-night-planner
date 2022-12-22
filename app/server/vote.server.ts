@@ -6,6 +6,5 @@ export function voteOnBoardgame(
   boardgameId: string,
   type: VoteType
 ): void {
-  console.log(222, userId, boardgameId, type);
   vote(userId, boardgameId, type);
 }

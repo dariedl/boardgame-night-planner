@@ -1,17 +1,20 @@
-import { BoardgameWithVotes } from "~/shared/boardgame";
-import { VoteWithName } from "~/shared/vote";
-import { getBoardgame, getBoardgames } from "../models/boardgame.seed";
-import { getVotes } from "../models/vote.seed";
+import type { BoardgameWithVotes } from "~/shared/boardgame";
+import type { VoteWithName } from "~/shared/vote";
+import {
+  getBoardgame,
+  getBoardgames,
+} from "../repository/boardgame.repository";
+import { getVotes } from "../repository/vote.repository";
 import { getUserInformation } from "./user.service";
 
-export function getBoardgameWithVotes(
+export async function getBoardgameWithVotes(
   boardgameId: string
-): BoardgameWithVotes | undefined {
-  const boardgame = getBoardgame(boardgameId);
+): Promise<BoardgameWithVotes | undefined> {
+  const boardgame = await getBoardgame(boardgameId);
   if (!boardgame) {
     return undefined;
   }
-  const votes = getVotes({ boardgame: boardgameId });
+  const votes = await getVotes({ boardgameId });
   const votesWithNames: VoteWithName[] = votes.map((vote) => {
     const user = getUserInformation(vote.userId);
     return { ...vote, userName: user?.name };
@@ -19,15 +22,21 @@ export function getBoardgameWithVotes(
   return { ...boardgame, votes: votesWithNames };
 }
 
-export function getBoardgamesWithVotes() {
-  const boardgames = getBoardgames();
+export async function getBoardgamesWithVotes() {
+  const boardgames = await getBoardgames();
+  const boardGamesWithVotes = [];
 
-  return boardgames.map((boardgame) => {
-    const votes = getVotes({ boardgame: boardgame.id });
-    const votesWithNames: VoteWithName[] = votes.map((vote) => {
-      const user = getUserInformation(vote.userId);
-      return { ...vote, userName: user?.name };
-    });
-    return { ...boardgame, votes: votesWithNames };
-  });
+  for (const boardgame of boardgames) {
+    const votes = await getVotes({ boardgameId: boardgame.id });
+    const votesWithNames = [];
+
+    for (const vote of votes) {
+      const user = await getUserInformation(vote.userId);
+      votesWithNames.push({ ...vote, userName: user?.name });
+    }
+
+    boardGamesWithVotes.push({ ...boardgame, votes: votesWithNames });
+  }
+
+  return boardGamesWithVotes;
 }

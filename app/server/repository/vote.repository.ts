@@ -1,18 +1,82 @@
-import type { User } from "~/shared/user";
-import prisma from "../db.server";
+import type { Vote as PrismaVote } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import type { Vote, VoteType } from "~/shared/vote";
 
-export async function getUsers(): Promise<User[]> {
-  return await prisma.user.findMany({});
-}
+const prisma = new PrismaClient();
 
-export async function getUserById(userId: string): Promise<User | undefined> {
-  const user = await prisma.user.findUnique({
+export async function getVote(
+  userId: string,
+  boardgameId: string
+): Promise<Vote | null> {
+  const vote = await prisma.vote.findUnique({
     where: {
-      id: userId,
+      userId_boardgameId: {
+        userId,
+        boardgameId,
+      },
     },
   });
-  if (!user) {
-    return undefined;
+
+  if (!vote) {
+    return null;
   }
-  return user;
+
+  return mapToVote(vote);
+}
+
+type VoteFilter = {
+  boardgameId?: string;
+  userId?: string;
+};
+
+export async function getVotes(filters?: VoteFilter) {
+  const votes = await prisma.vote.findMany({
+    where: {
+      userId: {
+        contains: filters?.userId,
+      },
+      boardgameId: {
+        contains: filters?.boardgameId,
+      },
+    },
+  });
+
+  return votes.map(mapToVote);
+}
+
+function mapToVote(vote: PrismaVote): Vote {
+  const type: VoteType =
+    vote?.type === "commit"
+      ? "commit"
+      : vote?.type === "interest"
+      ? "interest"
+      : "none";
+
+  return { ...vote, type };
+}
+
+export async function addVote(
+  userId: string,
+  boardgameId: string,
+  type: VoteType
+): Promise<Vote> {
+  return mapToVote(
+    await prisma.vote.create({ data: { userId, boardgameId, type } })
+  );
+}
+
+export async function removeVote(
+  userId: string,
+  boardgameId: string
+): Promise<Vote> {
+  const deletedVote = await prisma.vote.delete({
+    where: {
+      userId_boardgameId: {
+        userId,
+        boardgameId,
+      },
+    },
+  });
+
+  return mapToVote(deletedVote);
 }

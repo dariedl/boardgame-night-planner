@@ -1,16 +1,16 @@
 import type { VoteType } from "~/shared/vote";
 import { canVoteOnGame } from "~/shared/vote";
-import { addVote, removeVote } from "../models/vote.seed";
+import { addVote, removeVote } from "../repository/vote.repository";
 import { getBoardgameWithVotes } from "./boardgame.service";
 import { getUserInformation } from "./user.service";
 
-export function voteOnBoardgame(
+export async function voteOnBoardgame(
   userId: string,
   boardgameId: string,
   type: VoteType
 ) {
-  const user = getUserInformation(userId);
-  const boardgame = getBoardgameWithVotes(boardgameId);
+  const user = await getUserInformation(userId);
+  const boardgame = await getBoardgameWithVotes(boardgameId);
   if (!boardgame) {
     return;
   }
@@ -19,10 +19,10 @@ export function voteOnBoardgame(
   if (canVote === "CannotVote") {
     return;
   } else if (canVote === "CanAddVote") {
-    addVote(userId, boardgameId, type);
+    await addVote(userId, boardgameId, type);
   } else if (canVote === "CanReplaceVote") {
-    removeVote(userId, boardgameId);
-    addVote(userId, boardgameId, type);
+    await removeVote(userId, boardgameId);
+    await addVote(userId, boardgameId, type);
   }
   return;
 }

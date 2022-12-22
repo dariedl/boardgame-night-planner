@@ -1,15 +1,17 @@
-import { UserInformation } from "~/shared/user";
-import { getUserById } from "../models/user.seed";
-import { getVotes } from "../models/vote.seed";
+import type { UserInformation } from "~/shared/user";
+import { getUserById } from "../repository/user.repository";
+import { getVotes } from "../repository/vote.repository";
 
 const maxInterestVotes = 4;
 const maxCommitVotes = 1;
 
-export function getUserInformation(userId: string): UserInformation {
-  const user = getUserById(userId);
+export async function getUserInformation(
+  userId: string
+): Promise<UserInformation> {
+  const user = await getUserById(userId);
   if (!user) {
     throw new Error("No User with the Id found");
   }
-  const votes = getVotes({ user: user.id });
+  const votes = await getVotes({ userId });
   return { ...user, maxCommitVotes, maxInterestVotes, votes };
 }

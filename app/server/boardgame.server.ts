@@ -1,6 +1,6 @@
 import type { BoardgameWithVotes } from "~/shared/boardgame";
 import { getBoardgamesWithVotes } from "./services/boardgame.service";
 
-export function getBoardgameList(): BoardgameWithVotes[] {
+export async function getBoardgameList(): Promise<BoardgameWithVotes[]> {
   return getBoardgamesWithVotes();
 }

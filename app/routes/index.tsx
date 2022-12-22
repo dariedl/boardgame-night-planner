@@ -2,8 +2,8 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
 import { getBoardgameList } from "~/server/boardgame.server";
-import { voteOnBoardgame } from "~/server/vote.server";
 import { getUser } from "~/server/user.server";
+import { voteOnBoardgame } from "~/server/vote.server";
 
 type LoaderData = {
   boardgames: Awaited<ReturnType<typeof getBoardgameList>>;

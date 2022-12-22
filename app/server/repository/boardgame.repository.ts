@@ -1,6 +1,8 @@
-import type { Boardgame, Weight } from "~/shared/boardgame";
 import type { Boardgame as PrismaBoardgame } from "@prisma/client";
-import prisma from "../db.server";
+import { PrismaClient } from "@prisma/client";
+import type { Boardgame, Weight } from "~/shared/boardgame";
+
+const prisma = new PrismaClient();
 
 export async function getBoardgames(): Promise<Boardgame[]> {
   const boardgames = await prisma.boardgame.findMany({});
@@ -9,14 +11,14 @@ export async function getBoardgames(): Promise<Boardgame[]> {
 
 export async function getBoardgame(
   boardgameId: string
-): Promise<Boardgame | undefined> {
+): Promise<Boardgame | null> {
   const boardgame = await prisma.boardgame.findUnique({
     where: {
       id: boardgameId,
     },
   });
   if (!boardgame) {
-    return undefined;
+    return null;
   }
   return mapToBoardgame(boardgame);
 }
