@@ -5,7 +5,7 @@ import {
   getBoardgames,
 } from "../repository/boardgame.repository";
 import { getVotes } from "../repository/vote.repository";
-import { getUserInformation } from "./user.service";
+import { getUserWithVotes } from "./user.service";
 
 export async function getBoardgameWithVotes(
   boardgameId: string
@@ -16,7 +16,7 @@ export async function getBoardgameWithVotes(
   }
   const votes = await getVotes({ boardgameId });
   const votesWithNames: VoteWithName[] = votes.map((vote) => {
-    const user = getUserInformation(vote.userId);
+    const user = getUserWithVotes(vote.userId);
     return { ...vote, userName: user?.name };
   });
   return { ...boardgame, votes: votesWithNames };
@@ -31,7 +31,7 @@ export async function getBoardgamesWithVotes() {
     const votesWithNames = [];
 
     for (const vote of votes) {
-      const user = await getUserInformation(vote.userId);
+      const user = await getUserWithVotes(vote.userId);
       votesWithNames.push({ ...vote, userName: user?.name });
     }
 

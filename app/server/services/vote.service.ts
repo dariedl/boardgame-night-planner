@@ -2,14 +2,14 @@ import type { VoteType } from "~/shared/vote";
 import { checkVoteStatus } from "~/shared/vote";
 import { addVote, removeVote } from "../repository/vote.repository";
 import { getBoardgameWithVotes } from "./boardgame.service";
-import { getUserInformation } from "./user.service";
+import { getUserWithVotes } from "./user.service";
 
 export async function voteOnBoardgame(
   userId: string,
   boardgameId: string,
   type: VoteType
 ) {
-  const user = await getUserInformation(userId);
+  const user = await getUserWithVotes(userId);
   const boardgame = await getBoardgameWithVotes(boardgameId);
   if (!boardgame) {
     return;

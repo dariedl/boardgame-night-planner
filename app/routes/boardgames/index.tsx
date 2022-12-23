@@ -4,33 +4,33 @@ import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
 import { authenticator } from "~/server/auth/auth.server";
 import { getBoardgameList } from "~/server/boardgame.server";
+import { getUserInformation } from "~/server/user.server";
 import { voteOnBoardgame } from "~/server/vote.server";
-import type { UserInformation } from "~/shared/user";
 
 type LoaderData = {
   boardgames: Awaited<ReturnType<typeof getBoardgameList>>;
-  user: UserInformation;
+  user: Awaited<ReturnType<typeof getUserInformation>>;
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const type = form.get("voteType")!.toString();
   const [voteType, boardgameId] = type.split("-");
-  const user = await authenticator.isAuthenticated(request, {
+  const authUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  await voteOnBoardgame(user?.id, boardgameId, voteType);
+  await voteOnBoardgame(authUser.id, boardgameId, voteType);
   return null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await authenticator.isAuthenticated(request, {
+  const authUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
 
   return json<LoaderData>({
     boardgames: await getBoardgameList(),
-    user: user,
+    user: await getUserInformation(authUser.id),
   });
 };
 

@@ -18,7 +18,7 @@ export async function getUserById(userId: string): Promise<User | undefined> {
   return exclude({ user, keys: ["hashedPassword"] });
 }
 
-export async function getUserByName(
+export async function getAuthUserByNameAndPassword(
   name: string,
   password: string
 ): Promise<User | null> {
