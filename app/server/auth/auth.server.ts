@@ -1,7 +1,7 @@
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
-import { User } from "~/shared/user";
+import type { User } from "~/shared/user";
 import { getAuthUserByNameAndPassword } from "../repository/user.repository";
 import { sessionStorage } from "./session.server";
 
@@ -29,6 +29,7 @@ authenticator.use(
     if (!user) {
       throw new Error("No User found");
     }
+
     return user;
   })
 );

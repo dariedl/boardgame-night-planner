@@ -1,10 +1,15 @@
-import type { ActionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { Form, useCatch } from "@remix-run/react";
 import { authenticator } from "~/server/auth/auth.server";
 
 // First we create our UI with the form doing a POST and the inputs with the
 // names we are going to use in the strategy
-export default function Screen() {
+
+interface LoginProps {
+  incorrectCredentials?: boolean;
+}
+
+export default function Login({ incorrectCredentials }: LoginProps) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg">
@@ -38,6 +43,9 @@ export default function Screen() {
               </button>
               {/* <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a> */}
             </div>
+            {incorrectCredentials && (
+              <div className="text-red-500">Incorrect Credentials</div>
+            )}
           </div>
         </Form>
       </div>
@@ -51,10 +59,15 @@ export async function action({ request }: ActionArgs) {
   // we call the method with the name of the strategy we want to use and the
   // request object, optionally we pass an object with the URLs we want the user
   // to be redirected to after a success or a failure
-  return await authenticator.authenticate("form", request, {
+  const user = await authenticator.authenticate("form", request, {
     successRedirect: "/",
-    failureRedirect: "/login",
   });
+
+  // if (!user) {
+  //   throw new Error("Wrong Credentials");
+  // }
+
+  return user;
 }
 
 // Finally, we can export a loader function where we check if the user is
@@ -65,4 +78,12 @@ export async function loader({ request }: LoaderArgs) {
   return await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
+}
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <div>
+      <Login incorrectCredentials={true}></Login>
+    </div>
+  );
 }
