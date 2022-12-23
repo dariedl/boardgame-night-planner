@@ -14,12 +14,15 @@ model User {
   id        String   @id @default(uuid())
   name      String   @unique
   hashedPassword String
-  votes     Vote[]   
+  votes     Vote[]
+  hostedBoardGames  Boardgame[]   
 }
 
 model Boardgame {
   id        String   @id @default(uuid())
   title     String   @unique
+  hostedById  String?
+  hostedBy    User? @relation(fields: [hostedById], references: [id])
   description String?
   urlLink   String?
   minPlayers Int
