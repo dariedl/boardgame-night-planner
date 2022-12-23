@@ -4,9 +4,9 @@
   "scripts": {
     "build": "npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/tailwind.css -o app/styles/global.css",
-    "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "start": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "start:prod": "remix-serve build",
     "dev:css": "tailwindcss -w -i ./styles/tailwind.css -o app/styles/global.css",
-    "start": "remix-serve build",
     "typecheck": "tsc -b",
     "build:db": "npx prisma db push",
     "prisma:studio": "npx prisma studio",

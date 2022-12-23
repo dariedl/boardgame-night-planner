@@ -1,6 +1,6 @@
+import bcrypt from "bcrypt";
 import type { User } from "~/shared/user";
 import { prisma } from "./prisma.db";
-import bcrypt from "bcrypt";
 
 export async function getUsers(): Promise<User[]> {
   return await prisma.user.findMany({});
@@ -32,6 +32,7 @@ export async function getAuthUserByNameAndPassword(
     return null;
   }
   const isCorrectPassword = await bcrypt.compare(password, user.hashedPassword);
+
   if (!isCorrectPassword) {
     return null;
   }
