@@ -6,9 +6,9 @@ export type Weight = "light" | "midweight" | "heavy" | "undefined";
 export interface Boardgame {
   id: string;
   title: string;
-  hostedBy?: User | null;
-  urlLink?: string | null;
-  description?: string | null;
+  hostedBy?: User;
+  urlLink?: string;
+  description?: string;
   minPlayers: number;
   maxPlayers: number;
   weight: Weight;

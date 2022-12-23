@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
 import { authenticator } from "~/server/auth/auth.server";
 import { getBoardgameList } from "~/server/boardgame.server";
+import { hostBoardgame } from "~/server/services/boardgame.service";
 import { getUserInformation } from "~/server/user.server";
 import { voteOnBoardgame } from "~/server/vote.server";
 
@@ -14,12 +15,27 @@ type LoaderData = {
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
-  const type = form.get("voteType")!.toString();
-  const [voteType, boardgameId] = type.split("-");
+  const commitValue = form.get("commitBtn");
+  const interestValue = form.get("interestBtn");
+  const hostAddValue = form.get("hostAddBtn");
+  const hostRemoveValue = form.get("hostRemoveBtn");
   const authUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  await voteOnBoardgame(authUser.id, boardgameId, voteType);
+  if (commitValue) {
+    const boardgameId = commitValue.toString();
+    await voteOnBoardgame(authUser.id, boardgameId, "commit");
+  } else if (interestValue) {
+    const boardgameId = interestValue.toString();
+    await voteOnBoardgame(authUser.id, boardgameId, "interest");
+  } else if (hostAddValue) {
+    const boardgameId = hostAddValue.toString();
+    console.log("here", boardgameId);
+    await hostBoardgame(boardgameId, authUser.id);
+  } else if (hostRemoveValue) {
+    const boardgameId = hostRemoveValue.toString();
+    await hostBoardgame(boardgameId, authUser.id);
+  }
   return null;
 };
 

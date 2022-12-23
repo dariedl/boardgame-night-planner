@@ -26,6 +26,22 @@ export async function getBoardgame(
   return mapToBoardgame(boardgame);
 }
 
+export async function updateHost(
+  boardgameId: string,
+  userId: string | null
+): Promise<Boardgame> {
+  const boardgame = await prisma.boardgame.update({
+    where: {
+      id: boardgameId,
+    },
+    data: {
+      hostedById: userId,
+    },
+    include: { hostedBy: true },
+  });
+  return mapToBoardgame(boardgame);
+}
+
 export function mapToBoardgame(
   boardgame: PrismaBoardgame & {
     hostedBy: User | null;
@@ -42,6 +58,9 @@ export function mapToBoardgame(
 
   return {
     ...boardgame,
+    description: boardgame.description ?? undefined,
+    urlLink: boardgame.urlLink ?? undefined,
+    hostedBy: boardgame.hostedBy ?? undefined,
     weight: weight,
   };
 }

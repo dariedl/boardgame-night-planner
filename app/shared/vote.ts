@@ -53,3 +53,10 @@ export function hasInterestVotes(user: UserInformation, type: VoteType) {
   }
   return true;
 }
+export function mapStringToVoteType(type: string): VoteType {
+  return type === "commit"
+    ? "commit"
+    : type === "interest"
+    ? "interest"
+    : "none";
+}

@@ -1,6 +1,7 @@
 import { prisma } from "./prisma.db";
 import type { Vote as PrismaVote } from "@prisma/client";
 import type { Vote, VoteType } from "~/shared/vote";
+import { mapStringToVoteType } from "~/shared/vote";
 
 export async function getVote(
   userId: string,
@@ -42,17 +43,6 @@ export async function getVotes(filters?: VoteFilter) {
   return votes.map(mapToVote);
 }
 
-function mapToVote(vote: PrismaVote): Vote {
-  const type: VoteType =
-    vote?.type === "commit"
-      ? "commit"
-      : vote?.type === "interest"
-      ? "interest"
-      : "none";
-
-  return { ...vote, type };
-}
-
 export async function addVote(
   userId: string,
   boardgameId: string,
@@ -77,4 +67,18 @@ export async function removeVote(
   });
 
   return mapToVote(deletedVote);
+}
+
+export async function removeVotesByBoardgameId(
+  boardgameId: string
+): Promise<void> {
+  await prisma.vote.deleteMany({
+    where: {
+      boardgameId,
+    },
+  });
+}
+
+function mapToVote(vote: PrismaVote): Vote {
+  return { ...vote, type: mapStringToVoteType(vote.type) };
 }
