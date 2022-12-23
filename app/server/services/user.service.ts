@@ -16,10 +16,10 @@ export async function getUserInformation(
   return { ...user, maxCommitVotes, maxInterestVotes, votes };
 }
 
-export async function getUserInformationByName(name: string) {
-  const user = await getUserByName(name);
+export async function getAuthenticatedUser(name: string, password: string) {
+  const user = await getUserByName(name, password);
   if (!user) {
-    throw new Error("No User with the Id found");
+    throw new Error("No User found");
   }
   const votes = await getVotes({ userId: user.id });
   return { ...user, maxCommitVotes, maxInterestVotes, votes };

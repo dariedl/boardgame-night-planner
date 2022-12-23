@@ -1,4 +1,6 @@
 import { createCookieSessionStorage } from "@remix-run/node";
+import * as dotenv from "dotenv"; 
+dotenv.config();
 
 // export the whole sessionStorage object
 export let sessionStorage = createCookieSessionStorage({
@@ -7,7 +9,9 @@ export let sessionStorage = createCookieSessionStorage({
     sameSite: "lax", // this helps with CSRF
     path: "/", // remember to add this so the cookie will work in all routes
     httpOnly: true, // for security reasons, make this cookie http only
-    secrets: ["s3cr3t"], // replace this with an actual secret
+    secrets: process.env.SESSION_STORAGE_SECRET
+      ? [process.env.SESSION_STORAGE_SECRET]
+      : process.exit(-1),
     secure: process.env.NODE_ENV === "production", // enable this in prod only
   },
 });

@@ -2,7 +2,7 @@ import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
 import type { UserInformation } from "~/shared/user";
-import { getUserInformationByName } from "./services/user.service";
+import { getAuthenticatedUser } from "./services/user.service";
 import { sessionStorage } from "./session.server";
 
 // Create an instance of the authenticator, pass a generic with what
@@ -24,12 +24,7 @@ authenticator.use(
     invariant(password.length > 0, "password must not be empty");
 
     // And if you have a password you should hash it
-    //let hashedPassword = await hash(password);
-
     // And finally, you can find, or create, the user
-    let user = await getUserInformationByName(username);
-
-    // And return the user as the Authenticator expects it
-    return user;
+    return await getAuthenticatedUser(username, password);
   })
 );
