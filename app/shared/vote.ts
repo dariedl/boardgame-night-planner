@@ -13,9 +13,9 @@ export interface VoteWithName extends Vote {
   userName: string;
 }
 
-export type CanVoteResult = "CannotVote" | "CanAddVote" | "CanReplaceVote";
+export type CanVoteResult = "RemoveVote" | "AddVote" | "ReplaceVote" | "None";
 
-export function canVoteOnGame(
+export function checkVoteStatus(
   user: UserInformation,
   boardgame: BoardgameWithVotes,
   type: VoteType
@@ -25,17 +25,17 @@ export function canVoteOnGame(
   const canInterest = hasInterestVotes(user, type);
 
   if (currentVote && currentVote.type === type) {
-    return "CannotVote";
+    return "RemoveVote";
   } else if (currentVote && type === "commit" && canCommit) {
-    return "CanReplaceVote";
+    return "ReplaceVote";
   } else if (currentVote && type === "interest" && canInterest) {
-    return "CanReplaceVote";
+    return "ReplaceVote";
   } else if (!currentVote && type === "commit" && canCommit) {
-    return "CanAddVote";
+    return "AddVote";
   } else if (!currentVote && type === "interest" && canInterest) {
-    return "CanAddVote";
+    return "AddVote";
   }
-  return "CannotVote";
+  return "None";
 }
 
 export function hasCommitVotes(user: UserInformation, type: VoteType) {
