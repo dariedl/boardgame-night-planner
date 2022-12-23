@@ -2,7 +2,7 @@ import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
 import type { UserInformation } from "~/shared/user";
-import { getAuthenticatedUser } from "./services/user.service";
+import { getAuthenticatedUser } from "../services/user.service";
 import { sessionStorage } from "./session.server";
 
 // Create an instance of the authenticator, pass a generic with what

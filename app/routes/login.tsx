@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import { authenticator } from "~/server/auth.server";
+import { authenticator } from "~/server/auth/auth.server";
 
 // First we create our UI with the form doing a POST and the inputs with the
 // names we are going to use in the strategy

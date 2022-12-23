@@ -1,9 +1,9 @@
 import { createCookieSessionStorage } from "@remix-run/node";
-import * as dotenv from "dotenv"; 
+import * as dotenv from "dotenv";
 dotenv.config();
 
 // export the whole sessionStorage object
-export let sessionStorage = createCookieSessionStorage({
+export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "_session", // use any name you want here
     sameSite: "lax", // this helps with CSRF
@@ -17,4 +17,4 @@ export let sessionStorage = createCookieSessionStorage({
 });
 
 // you can also export the methods individually for your own usage
-export let { getSession, commitSession, destroySession } = sessionStorage;
+export const { getSession, commitSession, destroySession } = sessionStorage;

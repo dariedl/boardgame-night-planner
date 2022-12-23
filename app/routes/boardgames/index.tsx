@@ -2,7 +2,7 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BoardgameItem } from "~/components/BoardgameItem";
-import { authenticator } from "~/server/auth.server";
+import { authenticator } from "~/server/auth/auth.server";
 import { getBoardgameList } from "~/server/boardgame.server";
 import { voteOnBoardgame } from "~/server/vote.server";
 import type { UserInformation } from "~/shared/user";

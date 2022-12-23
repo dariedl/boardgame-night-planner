@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { authenticator } from "~/server/auth.server";
+import { authenticator } from "~/server/auth/auth.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
   return await authenticator.isAuthenticated(request, {
