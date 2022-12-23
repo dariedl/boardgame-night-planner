@@ -1,8 +1,6 @@
+import { prisma } from "./prisma.db";
 import type { Vote as PrismaVote } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
 import type { Vote, VoteType } from "~/shared/vote";
-
-const prisma = new PrismaClient();
 
 export async function getVote(
   userId: string,

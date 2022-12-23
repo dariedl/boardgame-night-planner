@@ -1,8 +1,6 @@
 import type { Boardgame as PrismaBoardgame } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./prisma.db";
 import type { Boardgame, Weight } from "~/shared/boardgame";
-
-const prisma = new PrismaClient();
 
 export async function getBoardgames(): Promise<Boardgame[]> {
   const boardgames = await prisma.boardgame.findMany({});
