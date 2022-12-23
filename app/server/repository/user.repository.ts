@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import type { User } from "~/shared/user";
 import { prisma } from "./prisma.db";
 
