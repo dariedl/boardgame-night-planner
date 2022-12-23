@@ -1,5 +1,5 @@
 import type { UserInformation } from "~/shared/user";
-import { getUserById } from "../repository/user.repository";
+import { getUserById, getUserByName } from "../repository/user.repository";
 import { getVotes } from "../repository/vote.repository";
 
 const maxInterestVotes = 4;
@@ -13,5 +13,14 @@ export async function getUserInformation(
     throw new Error("No User with the Id found");
   }
   const votes = await getVotes({ userId });
+  return { ...user, maxCommitVotes, maxInterestVotes, votes };
+}
+
+export async function getUserInformationByName(name: string) {
+  const user = await getUserByName(name);
+  if (!user) {
+    throw new Error("No User with the Id found");
+  }
+  const votes = await getVotes({ userId: user.id });
   return { ...user, maxCommitVotes, maxInterestVotes, votes };
 }
