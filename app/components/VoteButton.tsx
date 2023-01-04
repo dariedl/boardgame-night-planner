@@ -3,6 +3,7 @@ import type { BoardgameWithVotes } from '~/shared/boardgame';
 import { determineHostStatus } from '~/shared/boardgame';
 import type { UserInformation } from '~/shared/user';
 import { Button } from '@material-tailwind/react';
+import { colors } from './colors';
 
 interface VoteButtonProps {
 	boardgame: BoardgameWithVotes;
@@ -21,7 +22,12 @@ export const VoteButton = ({ user, boardgame }: VoteButtonProps) => {
 			{hostedStatus === 'HostedByOther' && (
 				<>
 					{userHasCommitVoted && (
-						<Button type="submit" name="commitBtn" value={boardgame.id} className="p-2 text-black m-2 mr-4 bg-gray-400">
+						<Button
+							type="submit"
+							name="commitBtn"
+							value={boardgame.id}
+							className={`p-2 text-black m-2 mr-4 ${colors.bg_gray}`}
+						>
 							Don't want to play
 						</Button>
 					)}
@@ -30,7 +36,7 @@ export const VoteButton = ({ user, boardgame }: VoteButtonProps) => {
 							type="submit"
 							name="commitBtn"
 							value={boardgame.id}
-							className="p-2 text-black m-2 mr-4 bg-green-500"
+							className={`p-2 text-black m-2 mr-4 ${colors.bg_commit}`}
 						>
 							Want to play!
 						</Button>
@@ -41,7 +47,7 @@ export const VoteButton = ({ user, boardgame }: VoteButtonProps) => {
 							name="interestBtn"
 							value={boardgame.id}
 							color="blue"
-							className="p-2 text-black m-2 mr-4 bg-gray-400"
+							className={`p-2 text-black m-2 mr-4 ${colors.bg_gray}`}
 						>
 							Not interested
 						</Button>
@@ -52,7 +58,7 @@ export const VoteButton = ({ user, boardgame }: VoteButtonProps) => {
 							name="interestBtn"
 							value={boardgame.id}
 							color="blue"
-							className="p-2 text-black m-2 mr-4 bg-blue-500"
+							className={`p-2 text-black m-2 mr-4 ${colors.bg_interest}`}
 						>
 							Interested
 						</Button>
@@ -60,12 +66,22 @@ export const VoteButton = ({ user, boardgame }: VoteButtonProps) => {
 				</>
 			)}
 			{hostedStatus === 'NotHosted' && (
-				<Button type="submit" name="hostAddBtn" value={boardgame.id} className="p-2 text-black m-2 mr-4 bg-red-700">
+				<Button
+					type="submit"
+					name="hostAddBtn"
+					value={boardgame.id}
+					className={`p-2 text-black m-2 mr-4 ${colors.bg_hosted}`}
+				>
 					Host game
 				</Button>
 			)}
 			{hostedStatus === 'HostedByUser' && (
-				<Button type="submit" name="hostRemoveBtn" value={boardgame.id} className="p-2 text-black m-2 mr-4 bg-gray-400">
+				<Button
+					type="submit"
+					name="hostRemoveBtn"
+					value={boardgame.id}
+					className={`p-2 text-black m-2 mr-4 ${colors.bg_gray}`}
+				>
 					Unhost
 				</Button>
 			)}
