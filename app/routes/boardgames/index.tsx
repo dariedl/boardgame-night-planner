@@ -30,7 +30,6 @@ export const action: ActionFunction = async ({ request }) => {
     await voteOnBoardgame(authUser.id, boardgameId, "interest");
   } else if (hostAddValue) {
     const boardgameId = hostAddValue.toString();
-    console.log("here", boardgameId);
     await hostBoardgame(boardgameId, authUser.id);
   } else if (hostRemoveValue) {
     const boardgameId = hostRemoveValue.toString();
