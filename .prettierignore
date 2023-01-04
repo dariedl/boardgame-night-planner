@@ -1,0 +1,4 @@
+# Ignore artifacts:
+prisma
+build
+coverage
