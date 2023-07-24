@@ -8,8 +8,6 @@ import { Dashboard } from '~/components/Dashboard';
 import { authenticator } from '~/server/auth/auth.server';
 import { getBoardgameList } from '~/server/boardgame.server';
 import { getUserInformation } from '~/server/user.server';
-import { determineHostStatus } from '~/shared/boardgame';
-import type { VoteType } from '~/shared/vote';
 
 type LoaderData = {
 	boardgames: Awaited<ReturnType<typeof getBoardgameList>>;
@@ -62,7 +60,7 @@ export default function Boardgames() {
 
 	return (
 		<main>
-			<Dashboard user={user}></Dashboard>
+			<Dashboard user={user} boardgames={boardgames}></Dashboard>
 			<ul className="m-5">
 				{boardgames.map((boardgame) => (
 					<li key={boardgame.title} className="mb-0.5">
