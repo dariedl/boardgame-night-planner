@@ -1,12 +1,15 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { logoutAction } from '~/actions/logoutAction';
+import { voteAction } from '~/actions/voteAction';
 import { BoardgameItem } from '~/components/BoardgameItem';
+import { Dashboard } from '~/components/Dashboard';
 import { authenticator } from '~/server/auth/auth.server';
 import { getBoardgameList } from '~/server/boardgame.server';
-import { hostBoardgame } from '~/server/services/boardgame.service';
 import { getUserInformation } from '~/server/user.server';
-import { voteOnBoardgame } from '~/server/vote.server';
+import { determineHostStatus } from '~/shared/boardgame';
+import type { VoteType } from '~/shared/vote';
 
 type LoaderData = {
 	boardgames: Awaited<ReturnType<typeof getBoardgameList>>;
@@ -15,27 +18,16 @@ type LoaderData = {
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
-	const commitValue = form.get('commitBtn');
-	const interestValue = form.get('interestBtn');
-	const hostAddValue = form.get('hostAddBtn');
-	const hostRemoveValue = form.get('hostRemoveBtn');
 	const authUser = await authenticator.isAuthenticated(request, {
 		failureRedirect: '/login',
 	});
-	if (commitValue) {
-		const boardgameId = commitValue.toString();
-		await voteOnBoardgame(authUser.id, boardgameId, 'commit');
-	} else if (interestValue) {
-		const boardgameId = interestValue.toString();
-		await voteOnBoardgame(authUser.id, boardgameId, 'interest');
-	} else if (hostAddValue) {
-		const boardgameId = hostAddValue.toString();
-		await hostBoardgame(boardgameId, authUser.id);
-	} else if (hostRemoveValue) {
-		const boardgameId = hostRemoveValue.toString();
-		await hostBoardgame(boardgameId, authUser.id);
+	const isLogout = form.get('intent');
+	console.log(isLogout);
+	if (isLogout === 'logout') {
+		return logoutAction(request);
 	}
-	return null;
+
+	return voteAction(form, authUser.id);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -51,19 +43,26 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Boardgames() {
 	const { boardgames, user } = useLoaderData() as LoaderData;
-	const interestVotes = user.votes.filter((vote) => vote.type === 'interest') ?? [];
-	const commitVotes = user.votes.filter((vote) => vote.type === 'commit') ?? [];
+
+	// sort alphabetically
+	boardgames.sort((aGame, bGame) => {
+		if (aGame.title < bGame.title) {
+			return -1;
+		}
+		if (aGame.title > bGame.title) {
+			return 1;
+		}
+		return 0;
+	});
+
+	// sort by popularity
+	boardgames.sort((aGame, bGame) => {
+		return bGame.votes.length - aGame.votes.length;
+	});
+
 	return (
 		<main>
-			<div className="flex flex-col">
-				<span>Name: {user?.name} </span>
-				<span>
-					Interest Votes: {interestVotes.length}/{user?.maxInterestVotes}
-				</span>
-				<span>
-					Commit Votes: {commitVotes.length}/{user?.maxCommitVotes}
-				</span>
-			</div>
+			<Dashboard user={user}></Dashboard>
 			<ul className="m-5">
 				{boardgames.map((boardgame) => (
 					<li key={boardgame.title} className="mb-0.5">
